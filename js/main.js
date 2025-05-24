@@ -1,8 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
   const header = document.getElementById('header');
   const menuToggle = document.querySelector('.menu-toggle');
-  const nav = document.querySelector('.nav');
-  const navLinks = document.querySelectorAll('.nav-link');
+  const mobileNav = document.querySelector('.mobile-nav');
+  const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImage = document.querySelector('.lightbox-image');
+  const lightboxClose = document.querySelector('.lightbox-close');
+  const clickableImages = document.querySelectorAll('.presentation-image, .section-image, .poster-image');
   
   // Header scroll effect
   function handleScroll() {
@@ -13,17 +17,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Toggle menu
+  // Toggle mobile menu
   function toggleMenu() {
     menuToggle.classList.toggle('active');
-    nav.classList.toggle('active');
+    mobileNav.classList.toggle('active');
     document.body.classList.toggle('menu-open');
   }
   
-  // Close menu on link click
+  // Close mobile menu
   function closeMenu() {
     menuToggle.classList.remove('active');
-    nav.classList.remove('active');
+    mobileNav.classList.remove('active');
     document.body.classList.remove('menu-open');
   }
   
@@ -41,11 +45,42 @@ document.addEventListener('DOMContentLoaded', function() {
     
     closeMenu();
   }
+
+  // Lightbox functionality
+  function openLightbox(e) {
+    const imgSrc = e.target.src;
+    const imgAlt = e.target.alt;
+    lightboxImage.src = imgSrc;
+    lightboxImage.alt = imgAlt;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      lightboxImage.src = '';
+      lightboxImage.alt = '';
+    }, 300);
+  }
   
   // Event listeners
   window.addEventListener('scroll', handleScroll);
   menuToggle.addEventListener('click', toggleMenu);
   navLinks.forEach(link => link.addEventListener('click', smoothScroll));
+  clickableImages.forEach(img => img.addEventListener('click', openLightbox));
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) {
+      closeLightbox();
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
   
   // Initialize on page load
   handleScroll();
