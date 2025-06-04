@@ -23,8 +23,9 @@
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
   
-  --header-height: 100px;
-  --header-height-scrolled: 100px;
+  --header-height: 110px;
+  --header-height-scrolled: 94px;
+  --poster-width: 280px;
 }
 
 *, *:before, *:after {
@@ -117,24 +118,35 @@ a {
 }
 
 .logo {
-  transition: color var(--transition-normal);
+  position: relative;
+  height: 100px;
+  display: block;
   z-index: 1001;
 }
 
 .logo img {
-  width: 200px;
+  height: 100%;
+  width: auto;
+  transition: opacity var(--transition-normal);
+}
+
+.logo-white {
+  opacity: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .logo-black {
-  display: none;
+  opacity: 0;
 }
 
 .header.scrolled .logo-white {
-  display: none;
+  opacity: 0;
 }
 
 .header.scrolled .logo-black {
-  display: flex;
+  opacity: 1;
 }
 
 /* Desktop Navigation */
@@ -288,7 +300,7 @@ a {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('../img/background.jpg');
+  background-image: url('/assets/img/background.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -325,74 +337,58 @@ a {
   margin: 0 auto;
 }
 
-/* Presentation Images */
-.presentation-images {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-lg);
-  margin: var(--spacing-xl) 0;
-}
-
-.image-container {
-  position: relative;
-  aspect-ratio: 16/9;
-  overflow: hidden;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.presentation-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--transition-normal);
-  cursor: pointer;
-}
-
-.presentation-image:hover {
-  transform: scale(1.05);
-}
-
-/* Section Images */
-.section-images {
-  margin-top: var(--spacing-xl);
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-lg);
-}
-
-.section-image-container {
-  aspect-ratio: 16/9;
-  overflow: hidden;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.section-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--transition-normal);
-  cursor: pointer;
-}
-
-.section-image:hover {
-  transform: scale(1.05);
-}
-
 /* Posters Grid */
 .posters-grid {
-  margin-top: var(--spacing-xl);
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-lg);
+  margin: var(--spacing-xl) auto;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Default grid layout (4 columns) */
+.posters-grid {
+  grid-template-columns: repeat(4, var(--poster-width));
+  max-width: calc(4 * var(--poster-width) + 3 * var(--spacing-lg));
+}
+
+/* Two columns for conciertos didacticos */
+#conciertos-didacticos .posters-grid {
+  grid-template-columns: repeat(2, var(--poster-width));
+  max-width: calc(2 * var(--poster-width) + var(--spacing-lg));
+}
+
+/* One column for conciertos beneficos */
+#conciertos-beneficos .posters-grid {
+  grid-template-columns: var(--poster-width);
+  max-width: var(--poster-width);
+}
+
+/* Three columns for viajes section */
+#viajes .posters-grid {
+  grid-template-columns: repeat(3, var(--poster-width));
+  max-width: calc(3 * var(--poster-width) + 2 * var(--spacing-lg));
+}
+
+/* Four columns for presentacion section */
+#presentacion .posters-grid {
+  grid-template-columns: repeat(4, var(--poster-width));
+  max-width: calc(4 * var(--poster-width) + 3 * var(--spacing-lg));
 }
 
 .poster-container {
-  aspect-ratio: 2/3;
+  width: var(--poster-width);
+  aspect-ratio: 1/1.4142; /* A4 paper ratio */
   overflow: hidden;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform var(--transition-normal);
+  background-color: var(--color-gray-100);
+  cursor: pointer;
+}
+
+.poster-container:hover {
+  transform: scale(1.02);
 }
 
 .poster-image {
@@ -400,11 +396,6 @@ a {
   height: 100%;
   object-fit: cover;
   transition: transform var(--transition-normal);
-  cursor: pointer;
-}
-
-.poster-image:hover {
-  transform: scale(1.05);
 }
 
 /* Lightbox */
@@ -466,11 +457,12 @@ a {
 }
 
 .footer-logo {
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
 }
 
-.footer-logo img {
-  max-width: 300px;
+.footer-logo .logo-img {
+  height: 120px;
+  width: auto;
 }
 
 .footer-tagline {
@@ -486,8 +478,9 @@ a {
 /* Responsive Styles */
 @media (max-width: 992px) {
   :root {
-    --header-height: 64px;
-    --header-height-scrolled: 56px;
+    --header-height: 94px;
+    --header-height-scrolled: 86px;
+    --poster-width: 240px;
   }
 
   .nav {
@@ -502,14 +495,26 @@ a {
     display: block;
   }
 
-  .presentation-images,
-  .section-images,
-  .posters-grid {
-    grid-template-columns: 1fr;
+  .posters-grid,
+  #viajes .posters-grid,
+  #conciertos-didacticos .posters-grid,
+  #presentacion .posters-grid {
+    grid-template-columns: repeat(2, var(--poster-width));
+    gap: var(--spacing-md);
+    max-width: calc(2 * var(--poster-width) + var(--spacing-md));
+  }
+
+  #conciertos-beneficos .posters-grid {
+    grid-template-columns: var(--poster-width);
+    max-width: var(--poster-width);
   }
 }
 
 @media (max-width: 768px) {
+  :root {
+    --poster-width: 220px;
+  }
+
   .container {
     width: 95%;
     padding: 0 var(--spacing-sm);
@@ -526,15 +531,26 @@ a {
 }
 
 @media (max-width: 480px) {
+  :root {
+    --poster-width: 280px;
+  }
+
+  .posters-grid,
+  #viajes .posters-grid,
+  #conciertos-didacticos .posters-grid,
+  #conciertos-beneficos .posters-grid,
+  #presentacion .posters-grid {
+    grid-template-columns: var(--poster-width);
+    max-width: var(--poster-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   body {
     font-size: 16px;
   }
 
   .section {
     padding: var(--spacing-lg) 0;
-  }
-
-  .image-container {
-    aspect-ratio: 1;
   }
 }
